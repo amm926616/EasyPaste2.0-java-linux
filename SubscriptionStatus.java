@@ -2,12 +2,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,13 +13,30 @@ public class SubscriptionStatus {
     String location = getLocation();
 
     public String checkSubscription () throws IOException, ParseException {
-        initialSetup();
         return getData("state");
+    }
+
+    public void checkExpiration() throws IOException, ParseException {
+        if (getData("state").equals("ALREADYPAIDFORTHEPROGRAM")) {
+            LocalDateTime expiredDate = LocalDateTime.parse(getData("expiredD"));
+            LocalDateTime currentDate = LocalDateTime.now();
+            if (currentDate.isAfter(expiredDate)) {
+                modifyData("state", "HAVENTPAIDFORTHEPROGRAMYET");
+                modifyData("expiredD", "null");
+            }
+        }
+    }
+
+    public String getExpiredDate() throws IOException, ParseException {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime expiredDate = currentDateTime.plusDays(30);
+        System.out.println(expiredDate);
+        return String.valueOf(expiredDate);
     }
 
     public void initialSetup() throws IOException {
         if (!Files.exists(Path.of(location))) {
-            putData("state", "HAVENTPAIDFORTHEPROGRAMYET", "expiredIn", "0");
+            putData("state", "HAVENTPAIDFORTHEPROGRAMYET", "expiredD", "null");
         }
     }
 
@@ -41,6 +56,22 @@ public class SubscriptionStatus {
 
         FileWriter fileWriter = new FileWriter(location);
         fileWriter.write(writeObject.toJSONString());
+        fileWriter.flush();
+        fileWriter.close();
+    }
+
+    public void modifyData(String key, String value) throws IOException, ParseException {
+        JSONParser parser = new JSONParser();
+        FileReader fileReader = new FileReader(location);
+        Object object = parser.parse(fileReader);
+        JSONObject readObject = (JSONObject) object;
+
+        // Modify the value associated with the specified key
+        readObject.put(key, value);
+
+        // Write the updated JSON data back to the file
+        FileWriter fileWriter = new FileWriter(location);
+        fileWriter.write(readObject.toJSONString());
         fileWriter.flush();
         fileWriter.close();
     }

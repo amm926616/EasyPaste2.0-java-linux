@@ -16,6 +16,8 @@ public class MainApplication extends Application {
         ActivationScene activationScene = new ActivationScene(new MainApplication(), activationButton, stage, easyPasteScene);
 
         SubscriptionStatus subscriptionStatus = new SubscriptionStatus();
+        subscriptionStatus.initialSetup();
+        subscriptionStatus.checkExpiration();
         String state = subscriptionStatus.checkSubscription();
 
         if (state.equals("HAVENTPAIDFORTHEPROGRAMYET")) {
