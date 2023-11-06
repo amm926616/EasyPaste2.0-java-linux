@@ -95,7 +95,7 @@ public class SubscriptionStatus {
     }
 
     public String getLocation () {
-        String folderPath = getRoamingPath() + "EasyPaste";
+        String folderPath = getRoamingPath() + "/EasyPaste";
         File folder = new File(folderPath);
 
         if (!folder.exists()) {
