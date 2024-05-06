@@ -9,6 +9,8 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.json.simple.parser.ParseException;
+
 import java.io.IOException;
 
 public class ActivationScene extends Scene {
@@ -58,9 +60,11 @@ public class ActivationScene extends Scene {
             if (textField.getText().equals(passCode)) {
                 SubscriptionStatus subscriptionStatus = new SubscriptionStatus();
                 try {
-                    subscriptionStatus.putData("state", "ALREADYPAIDFORTHEPROGRAM", "expiredD", "0");
+                    subscriptionStatus.putData("state", "ALREADYPAIDFORTHEPROGRAM", "expiredD", subscriptionStatus.getExpiredDate());
                 } catch (IOException ex) {
                     ex.printStackTrace();
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
                 }
                 stage.setTitle("EasyPaste2.0 by AdamD178");
                 stage.setScene(easyPasteScene);

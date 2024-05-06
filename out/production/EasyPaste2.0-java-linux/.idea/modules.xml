@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/EasyPaste2.0-java-linux.iml" filepath="$PROJECT_DIR$/.idea/EasyPaste2.0-java-linux.iml" />
+      <module fileurl="file://$PROJECT_DIR$/EasyPaste2.0-java-linux.iml" filepath="$PROJECT_DIR$/EasyPaste2.0-java-linux.iml" />
     </modules>
   </component>
 </project>
